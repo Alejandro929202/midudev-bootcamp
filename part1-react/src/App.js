@@ -4,7 +4,7 @@ import Mensaje from  './Mensaje.js'
 
 
 const Description = () =>{
-  return <p>Esta es la app del curso fullstack bootcamp </p>
+  return <p>Esta es la app del curso fullstack bootcamp      </p>
 }
 
 function App() {

@@ -1,15 +1,12 @@
 export const Note = (props) => {
   console.log({props})
-  const {categories = [], content, date} = props;
+  const {title, body} = props;
     return (
       <li>
-        <p> {content} </p>
+        <p> {title} </p>
         <small>
-          <time>{date}</time>
+          {body}
         </small>
-        {categories.map((category) => (
-          <small key={category}> {category} </small>
-        ))}
       </li>
     )
   } 

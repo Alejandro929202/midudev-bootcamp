@@ -26,6 +26,7 @@ export default function App(){
   const [newNote, setNewNote] = useState("");
   //const [showAll, setShowAll] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() =>{
     console.log("useEffect");
@@ -52,9 +53,14 @@ export default function App(){
       userId: 1
     };
 
+    setError("");
+
     createNote(noteToAddToState)
     .then(newNote => {
-      setNotes((prevNotes) => prevNotes.concat(data));
+      setNotes((prevNotes) => prevNotes.concat(newNote));
+    }).catch((e) =>{
+      console.error(e);
+      setError("La API ha petado");
     })
 
     //setNotes(notes.concat(noteToAddToState));
@@ -89,6 +95,7 @@ export default function App(){
       <form onSubmit={handleSubmit}>
           <input type='text' onChange={handleChange} />
           <button>Crear nota</button>
+          {Error ? error : ""}
       </form>
   </div>
   );

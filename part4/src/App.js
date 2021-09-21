@@ -39,6 +39,7 @@ export default function App(){
   }, [])
 
   
+  
 
   const handleChange = (event) => {
     setNewNote(event.target.value);

@@ -7,7 +7,7 @@ const { request, response } = require('express')
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const logger = require('./logger')
+const logger = require('./loggerMiddleware')
 
 
 //const http = require('http')
@@ -22,12 +22,7 @@ app.use(cors())
 app.use(logger)
 
 
-let notes = [{
-    id: 1,
-    content: 'Repasar los retos de JS de middudev',
-    date: '2019-05-30T19:20:14.298Z',
-    important: true
-}]
+let notes = []
 
 //creamos un servidor y le pasamos un parametro que es un callBack(funcion que se ejecuta cada vez que le llega una request) 
 /*const app = http.createServer((request, response) => {
@@ -41,7 +36,10 @@ app.get('/', (request, response) =>{
 })
 
 app.get('/api/notes', (request, response) => {
-    response.json(notes)
+    Note.find({}).then(notes => {
+        response.json(notes)
+    })
+    
 })
 
 app.get('/api/notes/:id', (request, response) => {
@@ -101,7 +99,9 @@ app.use((request, response) => {
     })
 })
 
-const PORT = 3001
+
+const PORT = process.env.PORT || 3001
+
 app.listen(PORT, () =>{
     console.log('Server running on port ${PORT}')
 })

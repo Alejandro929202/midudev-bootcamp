@@ -12,7 +12,7 @@ const app = express()
 const logger = require('./loggerMiddleware')
 const notFound = require('./middleware/notFound')
 const handleErrors = require('./middleware/handleErrors')
-
+const usersRouter = require('./controllers/users')
 
 //const http = require('http')
 
@@ -113,6 +113,8 @@ app.post('/api/notes', async (request, response, next) => {
 
     //response.status(200).json(newNote)
 })
+
+app.use('/api/users', usersRouter)
 
 //middleware control de errores next
 app.use(notFound)

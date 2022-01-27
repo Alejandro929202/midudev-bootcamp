@@ -39,12 +39,11 @@ app.get('/', (request, response) =>{
     response.send('<h1>Hello Wordl</h1>')
 })
 
-app.get('/api/notes', (request, response) => {
-    Note.find({}).then(notes => {
+app.get('/api/notes', async (request, response) => {
+    const notes = await Note.find({})
         response.json(notes)
-    })
-    
 })
+
 
 app.get('/api/notes/:id', (request, response, next) => {
     const { id } = request.params
@@ -78,15 +77,14 @@ app.put('/api/notes/:id', (request, response, next) => {
     
 })
 
-app.delete('/api/notes/:id', (request, response, next) => {
+app.delete('/api/notes/:id', async (request, response, next) => {
     const { id } = request.params
-    
-    Note.findByIdAndDelete(id).then(() => {
-        response.status(204).end()
-    }).catch(error => next(error))
+    await Note.findByIdAndDelete(id)
+    response.status(204).end()
+   
 })
 
-app.post('/api/notes', (request, response, next) => {
+app.post('/api/notes', async (request, response, next) => {
     const note = request.body
     
     if(!note || !note.content){
@@ -102,11 +100,18 @@ app.post('/api/notes', (request, response, next) => {
         
     })
 
-    newNote.save().then(savedNote => {
-        response.json(savedNote)
-    }).catch(err => next(err))
+    // newNote.save().then(savedNote => {
+    //     response.json(savedNote)
+    // }).catch(err => next(err))
 
-    response.status(201).json(newNote)
+    try{
+        const savedNote = await newNote.save()
+        response.json(savedNote)
+    }catch(error){
+        next(error)
+    }
+
+    //response.status(200).json(newNote)
 })
 
 //middleware control de errores next
@@ -128,7 +133,9 @@ app.use(handleErrors)
 
 const PORT = process.env.PORT 
 
-app.listen(PORT, () =>{
+const server = app.listen(PORT, () =>{
     console.log('Server running on port ${PORT}')
 })
+
+module.exports = {app, server}
 

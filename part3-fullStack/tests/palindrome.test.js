@@ -1,18 +1,18 @@
 const { palindrome } = require('../utils/for_testing')
 
-test('palindrome of alejandro', () =>{
+test.skip('palindrome of alejandro', () =>{
     const result = palindrome('alejandro')
 
     expect(result).toBe('ordnajela')
 })
 
-test('palindrome of empty string', () =>{
+test.skip('palindrome of empty string', () =>{
     const result = palindrome('')
 
     expect(result).toBe('')
 })
 
-test('palindrome of undefined', () =>{
+test.skip('palindrome of undefined', () =>{
     const result = palindrome()
 
     expect(result).toBeUndefined()

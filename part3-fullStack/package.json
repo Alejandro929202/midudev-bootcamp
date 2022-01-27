@@ -27,7 +27,8 @@
     "cors": "2.8.5",
     "dotenv": "14.2.0",
     "express": "4.17.1",
-    "mongoose": "^6.1.7"
+    "mongoose": "^6.1.7",
+    "mongoose-unique-validator": "^3.0.0"
   },
   "jest": {
     "testEnvironment": "node"

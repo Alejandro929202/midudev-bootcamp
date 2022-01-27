@@ -40,6 +40,27 @@ describe('Creating a new user', () =>{
         expect(usernames).toContain(newUser.username)
     })
 
+    test('creation fails with proper statuscode and message if username is alreade taken', 
+    async () =>{
+        const userAtStart = await getUsers()
+
+        const newUser = {
+            username: 'miduroot',
+            name: 'Miguel',
+            password: 'midutest'
+        }
+
+        const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+        expect(result.body.error).toContain('`username` to be unique')
+        const userAtEnd = await getUsers()
+        expect(userAtEnd).toHaveLength(userAtStart.length)
+    })
+
     afterAll(() => {
         moongose.connection.close()
         server.close()

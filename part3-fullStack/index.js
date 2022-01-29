@@ -2,17 +2,16 @@
 require('dotenv').config()
 //importar la conexion del fichero mongo.js
 require('./mongo') 
-const Note = require('./models/Note')
 
-//const { request } = require('express')
-const { request, response } = require('express')
+
 const express = require('express')
-const cors = require('cors')
 const app = express()
-const logger = require('./loggerMiddleware')
-const notFound = require('./middleware/notFound')
-const handleErrors = require('./middleware/handleErrors')
+const cors = require('cors')
+const Note = require('./models/Note')
+const notFound = require('./middleware/notFound.js')
+const handleErrors = require('./middleware/handleErrors.js')
 const usersRouter = require('./controllers/users')
+const User = require('./models/user.js')
 
 //const http = require('http')
 
@@ -23,7 +22,7 @@ app.use(express.json())
 //CORS middleware que permite decir a nuestra API de que origenes permitimos acceder
 app.use(cors())
 
-app.use(logger)
+//app.use(logger)
 
 
 // let notes = []
@@ -85,33 +84,41 @@ app.delete('/api/notes/:id', async (request, response, next) => {
 })
 
 app.post('/api/notes', async (request, response, next) => {
-    const note = request.body
-    
-    if(!note || !note.content){
-        return response.status(400).json({
-            error: 'note.content is missing'
-        })
-    }
+  const {
+    content,
+    important = false,
+    userId
+  } = request.body
 
-    const newNote  = new Note({
-        content: note.content,
-        date: new Date(),
-        important: note.important || false
-        
+  const user = await User.findById(userId)
+
+  if (!content) {
+    return response.status(400).json({
+      error: 'required "content" field is missing'
     })
+  }
 
-    // newNote.save().then(savedNote => {
-    //     response.json(savedNote)
-    // }).catch(err => next(err))
+  const newNote = new Note({
+    content,
+    date: new Date(),
+    important,
+    user: user._id
+  })
 
-    try{
-        const savedNote = await newNote.save()
-        response.json(savedNote)
-    }catch(error){
-        next(error)
-    }
+  // newNote.save().then(savedNote => {
+  //   response.json(savedNote)
+  // }).catch(err => next(err))
 
-    //response.status(200).json(newNote)
+  try {
+    const savedNote = await newNote.save()
+
+    user.notes = user.notes.concat(savedNote._id)
+    await user.save()
+
+    response.json(savedNote)
+  } catch (error) {
+    next(error)
+  }
 })
 
 app.use('/api/users', usersRouter)

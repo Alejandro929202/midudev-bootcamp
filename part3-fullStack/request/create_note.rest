@@ -2,6 +2,7 @@ POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-    "content": "Esto es una nueva nota",
-    "important": true
+    "content": "nota prueba relacionar colecciones",
+    "important": true,
+    "userId": "61f3efa0d734245ebbd6c41b"
 }
